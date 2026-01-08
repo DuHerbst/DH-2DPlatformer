@@ -16,7 +16,7 @@ public class PlayerMovement : MonoBehaviour
 
     void OnEnable()
     {
-        _testActions.Character.Jump.performed -= Jump; // when jump is performed, call the Jump function
+        _testActions.Character.Jump.performed += Jump; // when jump is performed, call the Jump function
         
     }
 
