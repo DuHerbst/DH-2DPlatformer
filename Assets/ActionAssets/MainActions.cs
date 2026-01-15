@@ -72,7 +72,7 @@ using UnityEngine.InputSystem.Utilities;
 /// }
 /// </code>
 /// </example>
-public partial class @MainActions : IInputActionCollection2, IDisposable
+public partial class @MainActions: IInputActionCollection2, IDisposable
 {
     /// <summary>
     /// Provides access to the underlying asset instance.
@@ -102,10 +102,10 @@ public partial class @MainActions : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Move"",
+                    ""name"": ""Horizontal"",
                     ""type"": ""Value"",
                     ""id"": ""2b42e2e3-abf5-4787-8fee-098d99bc1c6d"",
-                    ""expectedControlType"": ""Vector2"",
+                    ""expectedControlType"": ""Axis"",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
@@ -124,101 +124,35 @@ public partial class @MainActions : IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 },
                 {
-                    ""name"": ""Keyboard"",
-                    ""id"": ""9c4ad5e3-3d36-4fb0-8bf5-78ddc887d6c6"",
-                    ""path"": ""2DVector"",
+                    ""name"": ""1D Axis"",
+                    ""id"": ""cf5db6ee-bde7-4c8d-b8f1-176beb31a7ce"",
+                    ""path"": ""1DAxis"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Move"",
+                    ""action"": ""Horizontal"",
                     ""isComposite"": true,
                     ""isPartOfComposite"": false
                 },
                 {
-                    ""name"": ""up"",
-                    ""id"": ""35676cd0-e080-4d86-825f-f9b13d3c7c2e"",
-                    ""path"": ""<Keyboard>/w"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""up"",
-                    ""id"": ""7286f63d-04bf-4e6f-a83a-358dd693f91c"",
-                    ""path"": ""<Keyboard>/upArrow"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""down"",
-                    ""id"": ""dbc2e853-6a63-4930-a5cb-fb8627f144d5"",
-                    ""path"": ""<Keyboard>/s"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""down"",
-                    ""id"": ""b05082e1-5535-42d6-98e0-d1a6ceb7edda"",
-                    ""path"": ""<Keyboard>/downArrow"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""left"",
-                    ""id"": ""7080a616-36a1-4876-987f-e7d83fc2b8ed"",
-                    ""path"": ""<Keyboard>/a"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""left"",
-                    ""id"": ""32761088-f5e7-4d6e-bcb5-c964098d7eda"",
+                    ""name"": ""negative"",
+                    ""id"": ""1b457892-7df6-4740-8745-692c2bff3b17"",
                     ""path"": ""<Keyboard>/leftArrow"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Move"",
+                    ""action"": ""Horizontal"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
                 {
-                    ""name"": ""right"",
-                    ""id"": ""bfd727fa-0c33-498d-915f-d86805889791"",
-                    ""path"": ""<Keyboard>/d"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""right"",
-                    ""id"": ""1de910e1-4818-4382-8f77-aa907062c6d7"",
+                    ""name"": ""positive"",
+                    ""id"": ""99c367bd-6359-41a5-a408-31aa289ec7f2"",
                     ""path"": ""<Keyboard>/rightArrow"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Move"",
+                    ""action"": ""Horizontal"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 }
@@ -230,13 +164,12 @@ public partial class @MainActions : IInputActionCollection2, IDisposable
         // Character
         m_Character = asset.FindActionMap("Character", throwIfNotFound: true);
         m_Character_Jump = m_Character.FindAction("Jump", throwIfNotFound: true);
-        m_Character_Move = m_Character.FindAction("Move", throwIfNotFound: true);
+        m_Character_Horizontal = m_Character.FindAction("Horizontal", throwIfNotFound: true);
     }
 
     ~@MainActions()
     {
-        UnityEngine.Debug.Assert(!m_Character.enabled,
-            "This will cause a leak and performance issues, MainActions.Character.Disable() has not been called.");
+        UnityEngine.Debug.Assert(!m_Character.enabled, "This will cause a leak and performance issues, MainActions.Character.Disable() has not been called.");
     }
 
     /// <summary>
@@ -313,8 +246,7 @@ public partial class @MainActions : IInputActionCollection2, IDisposable
     private readonly InputActionMap m_Character;
     private List<ICharacterActions> m_CharacterActionsCallbackInterfaces = new List<ICharacterActions>();
     private readonly InputAction m_Character_Jump;
-    private readonly InputAction m_Character_Move;
-
+    private readonly InputAction m_Character_Horizontal;
     /// <summary>
     /// Provides access to input actions defined in input action map "Character".
     /// </summary>
@@ -325,52 +257,29 @@ public partial class @MainActions : IInputActionCollection2, IDisposable
         /// <summary>
         /// Construct a new instance of the input action map wrapper class.
         /// </summary>
-        public CharacterActions(@MainActions wrapper)
-        {
-            m_Wrapper = wrapper;
-        }
-
+        public CharacterActions(@MainActions wrapper) { m_Wrapper = wrapper; }
         /// <summary>
         /// Provides access to the underlying input action "Character/Jump".
         /// </summary>
         public InputAction @Jump => m_Wrapper.m_Character_Jump;
-
         /// <summary>
-        /// Provides access to the underlying input action "Character/Move".
+        /// Provides access to the underlying input action "Character/Horizontal".
         /// </summary>
-        public InputAction @Move => m_Wrapper.m_Character_Move;
-
+        public InputAction @Horizontal => m_Wrapper.m_Character_Horizontal;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
-        public InputActionMap Get()
-        {
-            return m_Wrapper.m_Character;
-        }
-
+        public InputActionMap Get() { return m_Wrapper.m_Character; }
         /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
-        public void Enable()
-        {
-            Get().Enable();
-        }
-
+        public void Enable() { Get().Enable(); }
         /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
-        public void Disable()
-        {
-            Get().Disable();
-        }
-
+        public void Disable() { Get().Disable(); }
         /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
         public bool enabled => Get().enabled;
-
         /// <summary>
         /// Implicitly converts an <see ref="CharacterActions" /> to an <see ref="InputActionMap" /> instance.
         /// </summary>
-        public static implicit operator InputActionMap(CharacterActions set)
-        {
-            return set.Get();
-        }
-
+        public static implicit operator InputActionMap(CharacterActions set) { return set.Get(); }
         /// <summary>
         /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
         /// </summary>
@@ -386,9 +295,9 @@ public partial class @MainActions : IInputActionCollection2, IDisposable
             @Jump.started += instance.OnJump;
             @Jump.performed += instance.OnJump;
             @Jump.canceled += instance.OnJump;
-            @Move.started += instance.OnMove;
-            @Move.performed += instance.OnMove;
-            @Move.canceled += instance.OnMove;
+            @Horizontal.started += instance.OnHorizontal;
+            @Horizontal.performed += instance.OnHorizontal;
+            @Horizontal.canceled += instance.OnHorizontal;
         }
 
         /// <summary>
@@ -403,9 +312,9 @@ public partial class @MainActions : IInputActionCollection2, IDisposable
             @Jump.started -= instance.OnJump;
             @Jump.performed -= instance.OnJump;
             @Jump.canceled -= instance.OnJump;
-            @Move.started -= instance.OnMove;
-            @Move.performed -= instance.OnMove;
-            @Move.canceled -= instance.OnMove;
+            @Horizontal.started -= instance.OnHorizontal;
+            @Horizontal.performed -= instance.OnHorizontal;
+            @Horizontal.canceled -= instance.OnHorizontal;
         }
 
         /// <summary>
@@ -435,14 +344,10 @@ public partial class @MainActions : IInputActionCollection2, IDisposable
             AddCallbacks(instance);
         }
     }
-
     /// <summary>
     /// Provides a new <see cref="CharacterActions" /> instance referencing this action map.
     /// </summary>
     public CharacterActions @Character => new CharacterActions(this);
-
-    public object OnJump { get; set; }
-
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Character" which allows adding and removing callbacks.
     /// </summary>
@@ -457,13 +362,12 @@ public partial class @MainActions : IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnJump(InputAction.CallbackContext context);
-
         /// <summary>
-        /// Method invoked when associated input action "Move" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "Horizontal" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnMove(InputAction.CallbackContext context);
+        void OnHorizontal(InputAction.CallbackContext context);
     }
 }

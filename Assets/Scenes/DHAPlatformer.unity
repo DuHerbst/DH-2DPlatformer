@@ -374,7 +374,7 @@ Transform:
   m_GameObject: {fileID: 288241880}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4.95, y: -3.07, z: 0}
+  m_LocalPosition: {x: 0, y: -3.16, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -457,16 +457,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
   moveSpeed: 10
-  jumpForce: 100
-  accelerationRampUp: 2
-  accelerationRampDown: 3
+  jumpForce: 5
+  playerActions: {fileID: 1249723414}
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
-  startPointOffset: {x: 0, y: 0}
-  groundCheckDistance: 10
+  startPointOffset: {x: 0, y: 0.49}
+  groundCheckDistance: 4
   isGrounded: 0
-  _testActions: {fileID: 1249723414}
 --- !u!1 &1167363900
 GameObject:
   m_ObjectHideFlags: 0
@@ -617,7 +615,6 @@ GameObject:
   - component: {fileID: 1249723416}
   - component: {fileID: 1249723418}
   - component: {fileID: 1249723417}
-  - component: {fileID: 1249723419}
   m_Layer: 0
   m_Name: InputSystem
   m_TagString: Untagged
@@ -773,29 +770,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!114 &1249723419
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1249723413}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 847cbd9c794264d79aede16121b590db, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerController
-  moveSpeed: 1
-  jumpForce: 1
-  accelerationRampUp: 1
-  accelerationRampDown: 1
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 0
-  startPointOffset: {x: 0, y: 0}
-  groundCheckDistance: 0
-  isGrounded: 0
-  _testActions: {fileID: 0}
 --- !u!1 &1998023000
 GameObject:
   m_ObjectHideFlags: 0
