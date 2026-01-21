@@ -21,14 +21,14 @@ public class PlayerMovement : MonoBehaviour
     {
         playerActions.Character.Jump.performed += OnJumpPressed; // when jump is performed, call the Jump function
         //_testActions.Character.Move.performed += OnMovement;
-
+    
     }
-
+    
     void OnDisable()
     {
         playerActions.Character.Jump.performed -= OnJumpPressed;
            //_testActions.Character.Move.performed -= OnMovement;
-
+    
     }
 
     void OnJumpPressed(InputAction.CallbackContext ctx)
@@ -36,14 +36,13 @@ public class PlayerMovement : MonoBehaviour
         OnJump?.Invoke(); // if the jump has listeners then invoke the jump action - lsiteners are the input system
         Debug.Log ("Jumped!");
     }
-
+    
     void OnMovement()
     {
-        //_moveInput = ctx.ReadValue<Vector2>();
         Move?.Invoke(playerActions.Character.Horizontal.ReadValue<float>());
-        //Debug.Log("Move Input: " + ctx.ReadValue<float>());
+        // Debug.Log("Weeeeee, moving!");
     }
-
+    
     private void Update()
     {
         OnMovement();

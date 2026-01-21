@@ -23,6 +23,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "Vertical",
+                    "type": "Value",
+                    "id": "dae951d0-3f34-4fd9-af2d-cd089c0115a3",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -49,7 +58,7 @@
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "negative",
+                    "name": "Negative",
                     "id": "1b457892-7df6-4740-8745-692c2bff3b17",
                     "path": "<Keyboard>/leftArrow",
                     "interactions": "",
@@ -60,13 +69,46 @@
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "positive",
+                    "name": "Positive",
                     "id": "99c367bd-6359-41a5-a408-31aa289ec7f2",
                     "path": "<Keyboard>/rightArrow",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "Horizontal",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "1D Axis",
+                    "id": "10094702-26e1-446d-aacb-768027508d06",
+                    "path": "1DAxis",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Vertical",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "Negative",
+                    "id": "e4ac3b84-67ba-4d34-ad14-f0a073f75dc0",
+                    "path": "<Keyboard>/downArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Vertical",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "Positive",
+                    "id": "54551581-7bb2-492b-88f1-d6e2654a820e",
+                    "path": "<Keyboard>/upArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Vertical",
                     "isComposite": false,
                     "isPartOfComposite": true
                 }

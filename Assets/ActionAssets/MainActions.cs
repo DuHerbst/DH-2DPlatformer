@@ -109,6 +109,15 @@ public partial class @MainActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Vertical"",
+                    ""type"": ""Value"",
+                    ""id"": ""dae951d0-3f34-4fd9-af2d-cd089c0115a3"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -135,7 +144,7 @@ public partial class @MainActions: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 },
                 {
-                    ""name"": ""negative"",
+                    ""name"": ""Negative"",
                     ""id"": ""1b457892-7df6-4740-8745-692c2bff3b17"",
                     ""path"": ""<Keyboard>/leftArrow"",
                     ""interactions"": """",
@@ -146,13 +155,46 @@ public partial class @MainActions: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": true
                 },
                 {
-                    ""name"": ""positive"",
+                    ""name"": ""Positive"",
                     ""id"": ""99c367bd-6359-41a5-a408-31aa289ec7f2"",
                     ""path"": ""<Keyboard>/rightArrow"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Horizontal"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""1D Axis"",
+                    ""id"": ""10094702-26e1-446d-aacb-768027508d06"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Vertical"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""Negative"",
+                    ""id"": ""e4ac3b84-67ba-4d34-ad14-f0a073f75dc0"",
+                    ""path"": ""<Keyboard>/downArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Vertical"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""Positive"",
+                    ""id"": ""54551581-7bb2-492b-88f1-d6e2654a820e"",
+                    ""path"": ""<Keyboard>/upArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Vertical"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 }
@@ -165,6 +207,7 @@ public partial class @MainActions: IInputActionCollection2, IDisposable
         m_Character = asset.FindActionMap("Character", throwIfNotFound: true);
         m_Character_Jump = m_Character.FindAction("Jump", throwIfNotFound: true);
         m_Character_Horizontal = m_Character.FindAction("Horizontal", throwIfNotFound: true);
+        m_Character_Vertical = m_Character.FindAction("Vertical", throwIfNotFound: true);
     }
 
     ~@MainActions()
@@ -247,6 +290,7 @@ public partial class @MainActions: IInputActionCollection2, IDisposable
     private List<ICharacterActions> m_CharacterActionsCallbackInterfaces = new List<ICharacterActions>();
     private readonly InputAction m_Character_Jump;
     private readonly InputAction m_Character_Horizontal;
+    private readonly InputAction m_Character_Vertical;
     /// <summary>
     /// Provides access to input actions defined in input action map "Character".
     /// </summary>
@@ -266,6 +310,10 @@ public partial class @MainActions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Character/Horizontal".
         /// </summary>
         public InputAction @Horizontal => m_Wrapper.m_Character_Horizontal;
+        /// <summary>
+        /// Provides access to the underlying input action "Character/Vertical".
+        /// </summary>
+        public InputAction @Vertical => m_Wrapper.m_Character_Vertical;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -298,6 +346,9 @@ public partial class @MainActions: IInputActionCollection2, IDisposable
             @Horizontal.started += instance.OnHorizontal;
             @Horizontal.performed += instance.OnHorizontal;
             @Horizontal.canceled += instance.OnHorizontal;
+            @Vertical.started += instance.OnVertical;
+            @Vertical.performed += instance.OnVertical;
+            @Vertical.canceled += instance.OnVertical;
         }
 
         /// <summary>
@@ -315,6 +366,9 @@ public partial class @MainActions: IInputActionCollection2, IDisposable
             @Horizontal.started -= instance.OnHorizontal;
             @Horizontal.performed -= instance.OnHorizontal;
             @Horizontal.canceled -= instance.OnHorizontal;
+            @Vertical.started -= instance.OnVertical;
+            @Vertical.performed -= instance.OnVertical;
+            @Vertical.canceled -= instance.OnVertical;
         }
 
         /// <summary>
@@ -369,5 +423,12 @@ public partial class @MainActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnHorizontal(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Vertical" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnVertical(InputAction.CallbackContext context);
     }
 }

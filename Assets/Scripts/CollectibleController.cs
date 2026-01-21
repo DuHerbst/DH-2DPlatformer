@@ -3,11 +3,9 @@ using System;
 
 public class CollectibleController : MonoBehaviour
 {
-    public static event Action OnCollected;
-    
+    public static event Action OnCollected; // when the collectible is collected...
 
-    // 2D physics trigger
-    private void OnTriggerEnter2D(Collider2D other)
+    private void OnTriggerEnter2D(Collider2D other) // when the player collides with the collectible
     {
         if (other != null && other.CompareTag("Player"))
         {
