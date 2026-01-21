@@ -14,7 +14,7 @@ public class PlayerMovement : MonoBehaviour
     {
         playerActions = new MainActions(); // create the input actions object
         playerActions.Enable(); // enable when the component is enabled
-        Debug.Log("Main Actions created");
+        Debug.Log("Main Actions created"); 
     }
 
     void OnEnable()

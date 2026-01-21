@@ -14,7 +14,7 @@ public class CollectibleTracker : MonoBehaviour
         CollectibleController.OnCollected -= HandleCollectibleCollected;
     }
     
-    private void HandleCollectibleCollected()
+    public void HandleCollectibleCollected()
     {
         CollectedCount++;
         Debug.Log("Total collectibles collected: " + CollectedCount);

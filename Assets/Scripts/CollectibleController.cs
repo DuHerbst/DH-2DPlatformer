@@ -3,21 +3,39 @@ using System;
 
 public class CollectibleController : MonoBehaviour
 {
-    public static event Action OnCollected; // when the collectible is collected...
 
-    private void OnTriggerEnter2D(Collider2D other) // when the player collides with the collectible
+    // COLLECTIBLE TYPES
+    public enum CollectibleType
     {
-        if (other != null && other.CompareTag("Player"))
-        {
-            Collect();
-        }
+        Coin,
+        PowerUp,
+        HealthPack,
     }
 
-    private void Collect()
+    [SerializeField] private CollectibleType collectibleType = CollectibleType.Coin; // default type is Coin
+    public static event Action OnCollected; // triggered when the collectible is collected
+
+
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        OnCollected?.Invoke(); // The collectible has been collected
-        Debug.Log("Collectible picked up!");
-        Destroy(gameObject);
+        if (other == null) return;
+
+        if (other.CompareTag("Player"))
+        {
+            CollectCoin();
+            // CollectibleTracker.HandleCollectibleCollected(collectibleType);
+        }
+
+    }
+    
+    private void CollectCoin()
+    {
+        if (CompareTag("Coin"))
+        {
+            OnCollected?.Invoke(); // The collectible has been collected
+            Debug.Log("Collectible (Coin) picked up!"); // Log message for collecting a coin
+            Destroy(gameObject); // Remove the collectible from the scene
+        }
     }
     
 }
