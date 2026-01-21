@@ -6,7 +6,10 @@ public class PlayerController : MonoBehaviour
 {
     //CHARACTER FEATURES
     [SerializeField] private float moveSpeed = 10f;
-    [SerializeField] private float jumpForce = 15f;
+    [SerializeField] private float jumpForce = 10f;
+    //[SerializeField] private float climbSpeed = 5f;
+    //[SerializeField] private float dashForce = 15f;
+    //[SerializeField] private float crouchSpeed = 5f;
     
     // INPUT MANAGER
     
@@ -71,7 +74,7 @@ public class PlayerController : MonoBehaviour
     
     void HandleMovement()
     {
-        if (_playerRb == null) return;
+        if (!_playerRb) return;
         
         _playerRb.linearVelocityX = _moveInput * moveSpeed;
 
