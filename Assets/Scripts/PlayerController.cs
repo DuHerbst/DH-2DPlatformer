@@ -1,5 +1,4 @@
 using System;
-using UnityEditor.Tilemaps;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -13,7 +12,7 @@ public class PlayerController : MonoBehaviour
     
     // INPUT MANAGER
     
-    [SerializeField] private PlayerMovement playerActions; // reference to the input actions scriptable object
+    [SerializeField] private PlayerMovement playerActions; // reference to the input actions component
     private float _moveInput = 0;
     private Rigidbody2D _playerRb;
     
@@ -30,35 +29,36 @@ public class PlayerController : MonoBehaviour
     
     private void GroundCheck()
     {
-        if (isGrounded)
-        {
-            Physics2D.Raycast((Vector2)transform.position + startPointOffset, Vector2.down, groundCheckDistance, groundLayer); // this whole line has a value, can be true or false
-        } 
-        
+        Vector2 origin = (Vector2)transform.position + startPointOffset;
+        RaycastHit2D hit = Physics2D.Raycast(origin, Vector2.down, groundCheckDistance, groundLayer);
+        isGrounded = hit.collider != null;
     }
 
     private void OnEnable()
     {
-        playerActions.OnJump += HandleJumpInput;
-        playerActions.Move += HandleMoveInput;
+        if (playerActions != null)
+        {
+            playerActions.OnJump += HandleJumpInput;
+            playerActions.Move += HandleMoveInput;
+        }
     }
 
     private void OnDisable()
     {
-        playerActions.OnJump -= HandleJumpInput;
-       playerActions.Move -= HandleMoveInput;
+        if (playerActions != null)
+        {
+            playerActions.OnJump -= HandleJumpInput;
+            playerActions.Move -= HandleMoveInput;
+        }
     }
 
     void HandleJumpInput()
     {
-        //Apply jump force here - do we need any of the values at the top if so?
-        if (_playerRb == null)
-        {
-            return;
-        }
-        
-        _playerRb.AddForceY(jumpForce, ForceMode2D.Impulse);
-        
+        //Apply jump force here
+        if (_playerRb == null) return;
+        if (!isGrounded) return;
+
+        _playerRb.AddForce(new Vector2(0f, jumpForce), ForceMode2D.Impulse);
     }
 
     void HandleMoveInput(float value)
@@ -66,7 +66,7 @@ public class PlayerController : MonoBehaviour
         _moveInput = value;
     }
     
-    void FixedUpdate() // to do movement is better to make everything in the fixed update method
+    void FixedUpdate() // do physics in FixedUpdate
     {
         HandleMovement();
         GroundCheck();
@@ -74,16 +74,15 @@ public class PlayerController : MonoBehaviour
     
     void HandleMovement()
     {
-        if (!_playerRb) return;
-        
-        _playerRb.linearVelocityX = _moveInput * moveSpeed;
-
+        if (_playerRb == null) return;
+        _playerRb.linearVelocity = new Vector2(_moveInput * moveSpeed, _playerRb.linearVelocity.y);
     }
 
     private void OnDrawGizmos()
     {
-        Debug.DrawLine((Vector2)transform.position + startPointOffset + (Vector2)transform.position + startPointOffset, 
-            Vector2.down * groundCheckDistance, isGrounded ? Color.purple : Color.red); // if is grounded is true, draw purple line, else draw red line
+        Vector2 start = (Vector2)transform.position + startPointOffset;
+        Vector2 end = start + Vector2.down * groundCheckDistance;
+        Debug.DrawLine(start, end, isGrounded ? Color.magenta : Color.red);
     }
     
 }

@@ -8,8 +8,8 @@ public class PlayerMovement : MonoBehaviour
     private MainActions playerActions; // this playerActions is now the new name of PlayerInputActions || underscores are used when the value is private
     public System.Action OnJump;
     public System.Action <float> Move; // this action needs a value inside <> -- that is why we add float.
-    
-    
+
+
     private void Awake()
     {
         playerActions = new MainActions(); // create the input actions object
@@ -18,7 +18,7 @@ public class PlayerMovement : MonoBehaviour
     }
 
     void OnEnable()
-    { 
+    {
         playerActions.Character.Jump.performed += OnJumpPressed; // when jump is performed, call the Jump function
         //_testActions.Character.Move.performed += OnMovement;
 
@@ -28,7 +28,7 @@ public class PlayerMovement : MonoBehaviour
     {
         playerActions.Character.Jump.performed -= OnJumpPressed;
            //_testActions.Character.Move.performed -= OnMovement;
-        
+
     }
 
     void OnJumpPressed(InputAction.CallbackContext ctx)
@@ -48,6 +48,6 @@ public class PlayerMovement : MonoBehaviour
     {
         OnMovement();
     }
-    
-    
+
+
 }
