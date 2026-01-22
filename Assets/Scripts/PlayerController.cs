@@ -4,6 +4,9 @@ public class PlayerController : MonoBehaviour
 {
     //CHARACTER FEATURES
     [SerializeField] private float moveSpeed = 10f;
+    [SerializeField] private float maxMoveSpeed = 10f;
+    [SerializeField] private float moveAcceleration = 10f;
+    [SerializeField] private float moveDeceleration = 10f;
     [SerializeField] private float jumpForce = 10f;
     [SerializeField] private float climbSpeed = 5f;
     [SerializeField] private float dashForce = 15f;
@@ -87,6 +90,8 @@ public class PlayerController : MonoBehaviour
         if (!_playerRb) return;
     
         _playerRb.linearVelocityX = _moveInput * moveSpeed;
+        // not gonna try Seans way this time tbh :D
+        
     
     }
 
