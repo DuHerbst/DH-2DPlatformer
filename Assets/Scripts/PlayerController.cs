@@ -10,6 +10,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float jumpForce = 10f;
     [SerializeField] private float climbSpeed = 5f;
     [SerializeField] private float dashForce = 15f;
+
+    [SerializeField] private int maxHealth = 100;
+    [SerializeField] private int currentHealth;
+    
     //[SerializeField] private float crouchSpeed = 5f;
     
     // INPUT MANAGER

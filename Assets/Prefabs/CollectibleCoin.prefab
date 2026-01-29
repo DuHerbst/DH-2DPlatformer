@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 4696033525941663586}
   - component: {fileID: 6792973687373636328}
   - component: {fileID: 7530039134837035047}
+  - component: {fileID: 863869903487087356}
+  - component: {fileID: 6317492152147102023}
   - component: {fileID: 8474662107967458416}
   - component: {fileID: 3503959233603550976}
   - component: {fileID: 7188963609450437950}
@@ -102,7 +104,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2034965725861269523}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: eee0f08e4874b4cdf9113813fe1905a1, type: 3}
   m_Name: 
@@ -122,6 +124,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3255d3fafa8714ff693950f313f83f8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CollectibleTracker
+--- !u!114 &863869903487087356
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2034965725861269523}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cec9c8c37e9a44dd7afce414a0354728, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CoinScripts
+--- !u!114 &6317492152147102023
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2034965725861269523}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 09a23c3a0b489433198dfc7560bb32f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Collector
 --- !u!50 &8474662107967458416
 Rigidbody2D:
   serializedVersion: 5
