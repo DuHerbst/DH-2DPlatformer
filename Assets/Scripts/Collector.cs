@@ -4,11 +4,17 @@ public class Collector : MonoBehaviour
 {
     void OnTriggerEnter2D(Collider2D other)
     {
-        ICollectible otherCollectible = other.GetComponent<ICollectible>();
+        other.GetComponent<ICollectible>();
 
-        if (otherCollectible != null)
+        if (other.gameObject.CompareTag("Coin"))
         {
-            otherCollectible.OnCollect();
+            Debug.Log("Collected Coin");
+            Destroy(other.gameObject);
+        }
+        else if (other.gameObject.CompareTag("HealthPack"))
+        {
+            Debug.Log("Collected Health Pack");
+            Destroy(other.gameObject);
         }
     }
 }

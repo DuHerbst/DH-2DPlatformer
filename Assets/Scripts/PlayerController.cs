@@ -1,7 +1,11 @@
+using System;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    // SPAWN POINT
+    public Transform spawnPoint;
+    
     //CHARACTER FEATURES
     [SerializeField] private float moveSpeed = 10f;
     [SerializeField] private float maxMoveSpeed = 10f;
@@ -10,9 +14,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float jumpForce = 10f;
     [SerializeField] private float climbSpeed = 5f;
     [SerializeField] private float dashForce = 15f;
-
-    [SerializeField] private int maxHealth = 100;
-    [SerializeField] private int currentHealth;
     
     //[SerializeField] private float crouchSpeed = 5f;
     
@@ -44,59 +45,78 @@ public class PlayerController : MonoBehaviour
         _playerRb = GetComponent<Rigidbody2D>();
     }
     
-    private void GroundCheck()
-    {
-        if (isGrounded)
-        {
-            Physics2D.Raycast((Vector2)transform.position + startPointOffset, Vector2.down, groundCheckDistance, groundLayer); // this whole line has a value, can be true or false
-        }
 
+    void GroundCheck()
+    {
+        isGrounded = Physics2D.Raycast((Vector2)transform.position + startPointOffset, Vector2.down, groundCheckDistance, groundLayer);
+    }
+    
+    void ClimbWallCheck()
+    {
+        isClimbing = Physics2D.Raycast((Vector2)transform.position + climbStartPointOffset, Vector2.right, climbWallCheckDistance, climbLayer);
     }
     
     void FixedUpdate() // to do movement is better to make everything in the fixed update method
     {
         HandleMovement();
         GroundCheck();
+        ClimbWallCheck();
+        //Debug.Log("Is Grounded: " + isGrounded);
     }
     
-    private void OnEnable()
+    void OnEnable()
     {
         playerActions.OnJump += HandleJumpInput;
         playerActions.Move += HandleMoveInput;
+        playerActions.Move += HandleClimbInput;
     }
     
-    private void OnDisable()
+    void OnDisable()
     { 
         playerActions.OnJump -= HandleJumpInput; 
         playerActions.Move -= HandleMoveInput;
+        playerActions.Move -= HandleClimbInput;
     }
     
     void HandleJumpInput()
-    {
-        //Apply jump force here - do we need any of the values at the top if so?
-        if (_playerRb == null)
         {
-            return;
+            
+            if (isGrounded)
+            {
+                _playerRb.AddForceY(jumpForce, ForceMode2D.Impulse); // Vertical force upwards
+                isGrounded = false; // we are no longer grounded after jumping so then the character cant jump again
+                Debug.Log("Jumped!");
+            }
+            
+            else
+            {
+                Debug.Log("You are not grounded, cannot jump"); // add double jump logic here later
+            }
+            
         }
-    
-        _playerRb.AddForceY(jumpForce, ForceMode2D.Impulse);
-    
-    }
     
     void HandleMoveInput(float value)
     {
+        //isGrounded = true;
         _moveInput = value;
     }
     
     
     void HandleMovement()
     {
-        if (!_playerRb) return;
-    
+        if (!_playerRb) return; 
         _playerRb.linearVelocityX = _moveInput * moveSpeed;
-        // not gonna try Seans way this time tbh :D
         
-    
+    }
+
+    void HandleClimbInput (float value) // climbing logic - hopefully we can get this to work!
+    {
+        if (CompareTag("ClimbWall"))
+        {
+            isClimbing = true;
+            Input.GetAxis("Vertical");
+            _playerRb.linearVelocityY = _moveInput * climbSpeed;
+        }
     }
 
     private void OnDrawGizmos()
@@ -104,6 +124,7 @@ public class PlayerController : MonoBehaviour
         Vector2 start = (Vector2)transform.position + startPointOffset; // it is probably better to add variables to everything so its better visually. Start point of the raycast
         Vector2 end = start + Vector2.down * groundCheckDistance; // end point of the raycast
         Debug.DrawLine(start, end, isGrounded ? Color.magenta : Color.red); // draw the line in the scene view, color changes based on if grounded or not
+        Debug.DrawLine(start, end, isClimbing ? Color.magenta : Color.red); // draw the line in the scene view, color changes based on if climbing or not
     }
     
 }

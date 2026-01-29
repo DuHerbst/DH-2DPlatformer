@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class PlayerFootsteps : MonoBehaviour
 {
-    [SerializeField] private Vector2 footstepEffectOffset; // Offset for footstep sounds
     [SerializeField] private ParticleSystem footstepEffect;
     [SerializeField] private string targetTag = "Ground"; // Tag to identify ground surfaces
 
