@@ -9,6 +9,7 @@ public class PlayerMovement : MonoBehaviour
     public System.Action OnJump;
     public System.Action <float> Move; // this action needs a value inside <> -- that is why we add float.
     public System.Action<float> Vertical;
+    public System.Action<float> Pause;
 
 
     private void Awake()
@@ -22,6 +23,7 @@ public class PlayerMovement : MonoBehaviour
     {
         playerActions.Character.Jump.performed += OnJumpPressed; // when jump is performed, call the Jump function
         //_testActions.Character.Move.performed += OnMovement;
+        playerActions.Character.Pause.performed += OnPausePressed;
     
     }
     
@@ -29,6 +31,7 @@ public class PlayerMovement : MonoBehaviour
     {
         playerActions.Character.Jump.performed -= OnJumpPressed;
            //_testActions.Character.Move.performed -= OnMovement;
+           playerActions.Character.Pause.performed -= OnPausePressed;
     
     }
 
@@ -46,6 +49,12 @@ public class PlayerMovement : MonoBehaviour
     private void Update()
     {
         OnMovement();
+    }
+    
+    public void OnPausePressed(InputAction.CallbackContext ctx)
+    {
+        Pause?.Invoke(playerActions.Character.Pause.ReadValue<float>());
+        Debug.Log("Pause Pressed");
     }
 
 
