@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class PlayerController : MonoBehaviour
 {
@@ -33,7 +34,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private LayerMask climbLayer;
     [SerializeField] private float climbWallCheckDistance; // how far the raycast checks for climbable walls
     [SerializeField] private Vector2 climbStartPointOffset; // offset for the raycast start point
-    [SerializeField] private bool isClimbing; // is the player currently climbing??
+    public bool canClimb; // is the player currently climbing??
     
     //DASH CHECK
     [SerializeField] private float dashDistance; // how far the dash goes (unsure how to implement yet)
@@ -51,33 +52,48 @@ public class PlayerController : MonoBehaviour
         isGrounded = Physics2D.Raycast((Vector2)transform.position + startPointOffset, Vector2.down, groundCheckDistance, groundLayer);
     }
     
-    void ClimbWallCheck()
-    {
-        isClimbing = Physics2D.Raycast((Vector2)transform.position + climbStartPointOffset, Vector2.right, climbWallCheckDistance, climbLayer);
-    }
+    // void ClimbWallCheck()
+    // {
+    //     isClimbing = Physics2D.Raycast((Vector2)transform.position + climbStartPointOffset, Vector2.right, climbWallCheckDistance, climbLayer);
+    // }
     
     void FixedUpdate() // to do movement is better to make everything in the fixed update method
     {
         HandleMovement();
         GroundCheck();
-        ClimbWallCheck();
-        //Debug.Log("Is Grounded: " + isGrounded);
     }
     
     void OnEnable()
     {
         playerActions.OnJump += HandleJumpInput;
         playerActions.Move += HandleMoveInput;
-        playerActions.Move += HandleClimbInput;
+        playerActions.Vertical += HandleClimbInput;
+        playerActions.Pause += OnPause;
     }
-    
+
+    private void OnPause(float obj)
+    {
+        Debug.Log("PlayerController detected Pause input");
+        // find one game manager in the scene and call its pause method
+        
+        GameManager gameManager = FindObjectOfType<GameManager>();
+        if (gameManager != null)
+        {
+            gameManager.PauseGame();
+        }
+        
+    }
+
+
     void OnDisable()
     { 
         playerActions.OnJump -= HandleJumpInput; 
         playerActions.Move -= HandleMoveInput;
-        playerActions.Move -= HandleClimbInput;
+        playerActions.Vertical -= HandleClimbInput;
+        playerActions.Pause -= OnPause;
     }
     
+
     void HandleJumpInput()
         {
             
@@ -111,20 +127,30 @@ public class PlayerController : MonoBehaviour
 
     void HandleClimbInput (float value) // climbing logic - hopefully we can get this to work!
     {
-        if (CompareTag("ClimbWall"))
+        
+        if (canClimb)
         {
-            isClimbing = true;
-            Input.GetAxis("Vertical");
+            isGrounded = true;
+            _moveInput = value;
+            //_playerRb.gravityScale = 0;
             _playerRb.linearVelocityY = _moveInput * climbSpeed;
         }
+        // else
+        // {
+        //     _playerRb.gravityScale = 2;
+        // }
     }
+    
+    
 
     private void OnDrawGizmos()
     {
         Vector2 start = (Vector2)transform.position + startPointOffset; // it is probably better to add variables to everything so its better visually. Start point of the raycast
         Vector2 end = start + Vector2.down * groundCheckDistance; // end point of the raycast
+        
         Debug.DrawLine(start, end, isGrounded ? Color.magenta : Color.red); // draw the line in the scene view, color changes based on if grounded or not
-        Debug.DrawLine(start, end, isClimbing ? Color.magenta : Color.red); // draw the line in the scene view, color changes based on if climbing or not
+        
+        Debug.DrawLine(start, end, canClimb ? Color.magenta : Color.red); // draw the line in the scene view, color changes based on if climbing or not
     }
     
 }
