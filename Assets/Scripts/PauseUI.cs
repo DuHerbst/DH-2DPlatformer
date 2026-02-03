@@ -9,7 +9,6 @@ public class PauseUI : MonoBehaviour
         
     }
     
-    
     public void RestartGame()
     {
         GameManager.Instance.RestartGame();

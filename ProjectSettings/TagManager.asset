@@ -8,6 +8,7 @@ TagManager:
   - Ground
   - HealthPack
   - ClimbWall
+  - Hazards
   layers:
   - Default
   - TransparentFX
@@ -16,7 +17,7 @@ TagManager:
   - Water
   - UI
   - Climb Wall
-  - 
+  - Hazards
   - 
   - 
   - 

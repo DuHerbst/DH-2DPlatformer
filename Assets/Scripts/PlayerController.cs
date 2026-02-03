@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -15,11 +17,20 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float jumpForce = 10f;
     [SerializeField] private float climbSpeed = 5f;
     [SerializeField] private float dashForce = 15f;
-    
     //[SerializeField] private float crouchSpeed = 5f;
     
-    // INPUT MANAGER
+    //HP AND LIVES
+    [SerializeField] private int maxHealth = 3;
+    private int currentHealth;
+    private int onHitDamage = 1;
+    private bool isDead = false; // trigger death or game over
+    private bool canTakeDamage = true;
+    [SerializeField] private float invincibilityDuration = 1f;
+    [SerializeField] private Transform respawnPoint;
+    [SerializeField] private float respawnDelay = 0.5f;
     
+    
+    // INPUT MANAGER
     [SerializeField] private PlayerMovement playerActions; // reference to the input actions scriptable object
     private float _moveInput = 0;
     private Rigidbody2D _playerRb;
@@ -43,7 +54,8 @@ public class PlayerController : MonoBehaviour
     
     void Awake()
     {
-        _playerRb = GetComponent<Rigidbody2D>();
+        _playerRb = GetComponent<Rigidbody2D>(); // to get the rigidbody component from this game object
+        currentHealth = maxHealth;
     }
     
 
@@ -76,11 +88,16 @@ public class PlayerController : MonoBehaviour
         Debug.Log("PlayerController detected Pause input");
         // find one game manager in the scene and call its pause method
         
-        GameManager gameManager = FindObjectOfType<GameManager>();
+        GameManager gameManager = FindObjectOfType <GameManager>();
+        Debug.Log("Game Manager found? " + (gameManager != null));
+        
         if (gameManager != null)
         {
-            gameManager.PauseGame();
+            return;
         }
+        
+        gameManager.TogglePause();
+        Debug.Log("You pressed esc! " + gameManager.isPaused);
         
     }
 
@@ -150,7 +167,67 @@ public class PlayerController : MonoBehaviour
         
         Debug.DrawLine(start, end, isGrounded ? Color.magenta : Color.red); // draw the line in the scene view, color changes based on if grounded or not
         
-        Debug.DrawLine(start, end, canClimb ? Color.magenta : Color.red); // draw the line in the scene view, color changes based on if climbing or not
+    }
+    
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (!canTakeDamage || isDead)
+        {
+            return;
+        }
+        
+        if (other.gameObject.CompareTag("Hazards"))
+        {
+            TakeDamage(onHitDamage);
+        }
+    }
+    
+    private void TakeDamage(int damage)
+    {
+        currentHealth -= damage;
+        Debug.Log("Player took damage. Current health: " + currentHealth);
+        
+        // start invicibility coroutine and cooldown here 
+        
+        if (currentHealth <= 0 && !isDead)
+        {
+            Die();
+            return;
+        }
+        
+        StartCoroutine(InvincibilityCooldown());
+        
+    }
+    
+    private void Die()
+    {
+        isDead = true;
+        Debug.Log("Player has died!");
+
+        StartCoroutine(RespawnRoutine());
+
+    }
+    
+    
+    private IEnumerator InvincibilityCooldown()
+    {
+        canTakeDamage = false;
+        Debug.Log("Invincibility active");
+        yield return new WaitForSeconds(invincibilityDuration);
+        canTakeDamage = true;
+        Debug.Log("Invincibility inactive now");
+    }
+
+    private IEnumerator RespawnRoutine()
+    {
+        yield return new WaitForSeconds(respawnDelay);
+        transform.position = respawnPoint.position; // this will move the player to the point
+        currentHealth = maxHealth; // reset health
+        isDead = false; // reset death
+
+        StartCoroutine(InvincibilityCooldown());
+        Debug.Log("The player has respawned!! Is this working now? ahgsjdjkadnbsn");
+
     }
     
 }
