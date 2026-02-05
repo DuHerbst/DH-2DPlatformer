@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -7,9 +8,13 @@ public class GameManager : MonoBehaviour
 
     public GameObject pauseMenu;
     public bool isPaused = false;
-    public bool IsPaused => isPaused;
     public bool isGameOver = false;
     public bool isLevelComplete = false;
+    
+    // LEVEL TIMER
+    [SerializeField] private float levelTime = 100f; 
+    [SerializeField] private Image timerBarFill;
+    private float _remainingTime; // try to add a _ to private variables
 
     
     public static GameManager Instance { get; private set; }
@@ -27,21 +32,29 @@ public class GameManager : MonoBehaviour
         }
 
         Instance = this;
+        
+        _remainingTime = levelTime;
+        UpdateTimerUI();
+        
     }
 
-    // private void Update()
-    // {
-    //         if (isPaused)
-    //         {
-    //             ResumeGame();
-    //         }
-    //
-    //         else
-    //         {
-    //             PauseGame();
-    //         }
-    //     
-    // }
+    private void Update()
+    {
+        if (isPaused || isGameOver || isLevelComplete)
+        {
+            return;  // The timer doesnt update during these
+        }
+        
+        _remainingTime -= Time.deltaTime; // decrease the remaining time
+        _remainingTime = Mathf.Clamp(_remainingTime, 0, levelTime); // time can't go below 0 -- math clamping is awesome!
+        UpdateTimerUI();
+        
+        if (_remainingTime <= 0)
+        {
+            RestartGame();
+        }
+        
+    }
 
 
     public void PauseGame() // Pauses the game by setting timescale to 0
@@ -85,9 +98,18 @@ public class GameManager : MonoBehaviour
     }
 
     public void QuitGame() // quits game to main menu
+    { 
+        Debug.Log("Quit Game button has been pressed"); 
+        SceneManager.LoadScene("StartMenu");
+    }
+    
+    private void UpdateTimerUI()
     {
-        Debug.Log("Quit Game button has been pressed");
-       // SceneManager.LoadScene("MainMenu"); // need to create the main menu scene
+        if (timerBarFill != null)
+        {
+            timerBarFill.fillAmount = _remainingTime / levelTime; // Update the UI fill amount based on remaining time
+            timerBarFill.color = Color.Lerp(Color.red, Color.green, _remainingTime / levelTime); // Change color from green to red based on time left
+        }
     }
     
 }

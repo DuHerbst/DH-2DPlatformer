@@ -3,5 +3,4 @@ public interface ICollectible // an interface for COLLECTIBLE ITEMS. For now we 
 
 {
     void OnCollect();
-    
 }

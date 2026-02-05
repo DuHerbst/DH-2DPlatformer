@@ -1,39 +1,43 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
+    // AUDIO
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip deathSound;
+    [SerializeField] private AudioClip jumpSound;
+    [SerializeField] private AudioClip damageSound;
+    [SerializeField] private AudioClip healSound;
+    
     // SPAWN POINT
     public Transform spawnPoint;
     
     //CHARACTER FEATURES
     [SerializeField] private float moveSpeed = 10f;
-    [SerializeField] private float maxMoveSpeed = 10f;
-    [SerializeField] private float moveAcceleration = 10f;
-    [SerializeField] private float moveDeceleration = 10f;
     [SerializeField] private float jumpForce = 10f;
     [SerializeField] private float climbSpeed = 5f;
     
     //HP AND LIVES
     [SerializeField] private int maxHealth = 3;
-    private int currentHealth;
-    private int onHitDamage = 1;
-    private bool isDead = false; // trigger death or game over
-    private bool canTakeDamage = true;
+    private int _currentHealth;
+    private int _onHitDamage = 1;
+    private bool _isDead = false; // trigger death or game over
+    private bool _canTakeDamage = true;
+    
     [SerializeField] private float invincibilityDuration = 1f;
     [SerializeField] private Transform respawnPoint;
     [SerializeField] private float respawnDelay = 0.5f;
 
-    //public GameObject healthHearts []; // does this create an array of heart game objects in the UI? -- i dont think so... 
+    public Image[] healthHearts; // does this create an array of heart game objects in the UI?
     public Sprite fullHeart;
     public Sprite emptyHeart;
     
     // INPUT MANAGER
     [SerializeField] private PlayerMovement playerActions; // reference to the input actions scriptable object
-    private float _moveInput = 0;
+    private float _moveInputX = 0f;
+    private float _moveInputY = 0f;
     private Rigidbody2D _playerRb;
     
     //GROUND CHECK
@@ -47,16 +51,13 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float climbWallCheckDistance; // how far the raycast checks for climbable walls
     [SerializeField] private Vector2 climbStartPointOffset; // offset for the raycast start point
     public bool canClimb; // is the player currently climbing??
-
-    // public PlayerController(GameObject healthHearts)
-    // {
-    //     this.healthHearts = healthHearts;
-    // }
+    
 
     void Awake()
     {
         _playerRb = GetComponent<Rigidbody2D>(); // to get the rigidbody component from this game object
-        currentHealth = maxHealth;
+        _currentHealth = maxHealth;
+        UpdateHealthUI();
     }
     
 
@@ -119,6 +120,7 @@ public class PlayerController : MonoBehaviour
             {
                 _playerRb.AddForceY(jumpForce, ForceMode2D.Impulse); // Vertical force upwards
                 isGrounded = false; // we are no longer grounded after jumping so then the character cant jump again
+                audioSource.PlayOneShot(jumpSound); // Play sound effect for jumping
                 Debug.Log("Jumped!");
             }
             
@@ -132,14 +134,14 @@ public class PlayerController : MonoBehaviour
     void HandleMoveInput(float value)
     {
         //isGrounded = true;
-        _moveInput = value;
+        _moveInputX = value;
     }
     
     
     void HandleMovement()
     {
         if (!_playerRb) return; 
-        _playerRb.linearVelocityX = _moveInput * moveSpeed; // whne we are talking about velocity += is always acceleration (review)
+        _playerRb.linearVelocityX = _moveInputX * moveSpeed; // whne we are talking about velocity += is always acceleration (review)
         
         
     }
@@ -150,12 +152,16 @@ public class PlayerController : MonoBehaviour
         if (canClimb)
         {
             isGrounded = true;
-            _moveInput = value;
+            _moveInputY = value;
             _playerRb.gravityScale = 0;
-            _playerRb.linearVelocityY = _moveInput * climbSpeed;
+            _playerRb.linearVelocityY = _moveInputY * climbSpeed;
+        }
+
+        else
+        {
+            _playerRb.gravityScale = 2;
         }
         
-        //reapply gravity when not climbing --
     }
     
     
@@ -171,114 +177,101 @@ public class PlayerController : MonoBehaviour
     
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (!canTakeDamage || isDead)
+        if (!_canTakeDamage || _isDead)
         {
             return;
         }
         
         if (other.gameObject.CompareTag("Hazards"))
         {
-            TakeDamage(onHitDamage);
+            TakeDamage(_onHitDamage);
         }
 
         if (other.gameObject.CompareTag("HealthPack"))
         {
             HealPlayer(1);
+            UpdateHealthUI();
             Destroy(other.gameObject);
         }
     }
 
     private void HealPlayer(int i)
     {
-        // need to add healing logic here
-        currentHealth += i;
-        currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth); // if current health after healing exceeds max health, set it to max health and not go past that
+        _currentHealth += i;
+        audioSource.PlayOneShot(healSound); // Play sound effect for healing taken
+        _currentHealth = Mathf.Clamp(_currentHealth, 0, maxHealth); // if current health after healing exceeds max health, set it to max health and not go past that
         
     }
 
     private void TakeDamage(int damage)
     {
         
-        if (!canTakeDamage || isDead)
+        if (!_canTakeDamage || _isDead)
         {
+            audioSource.PlayOneShot(damageSound); // Play sound effect for damage taken
             return;
         }
         
-        currentHealth -= damage;
+        _currentHealth = Mathf.Clamp (_currentHealth - damage, 0, maxHealth); // to reduce health up to 0
+        Debug.Log("Player took damage. Current health: " + _currentHealth);
         
-        // a math function: math f to show how it looks like? I am not sure - i think it goes like this: (clamps values between a minimum and maximum value)
-       currentHealth = Mathf.Clamp (currentHealth - damage, 0, maxHealth);
-       
-
-        Debug.Log("Player took damage. Current health: " + currentHealth);
-        
-        //here we need to build the health UI updates
-        // player takes damage
-        // player loses 1 heart per hit
-        // UI gets updated if current health is less than max
-        // start with an array of hearts in the UI manager
-        
-        if (currentHealth <= 0)
-        {
-            
-            isDead = true;
-            Debug.Log("You dead uwu");
-            FindFirstObjectByType<GameManager>().RestartGame();
-            
-        }
-        
-        if (currentHealth <= 0 && !isDead)
+        if (_currentHealth <= 0 && !_isDead) // if the players health is 0 AND ITS NOT DEAD (!)
         {
             Die();
             return;
         }
         
+        UpdateHealthUI();
         StartCoroutine(InvincibilityCooldown());
         
     }
     
     private void Die()
     {
-        isDead = true;
+        _isDead = true;
         Debug.Log("Player has died!");
-
+        audioSource.PlayOneShot(deathSound); // Play sound effect for damage taken
         StartCoroutine(RespawnRoutine());
 
     }
     
-    //create an update function to show the updates in the UI hearts
-    // public UpdateHealthUI()
-    // {
-    //     for (int i = 0; i < healthHearts.Length; i);
-    //
-    //     {
-    //         if (i < currentHealth)
-    //         {
-    //             healthHearts[i].sprite = fullHeart;
-    //         }
-    //         else
-    //         {
-    //             healthHearts[i].sprite = emptyHeart;
-    //         }
-    //     }
-    // }
+    //show the updates in the UI hearts
+    private void UpdateHealthUI()
+     {
+         for (int i = 0; i < healthHearts.Length; i++) // we need to loop through each heart in the array
+    
+         {
+             if (i < _currentHealth)
+             {
+                 healthHearts[i].sprite = fullHeart;
+             }
+             else
+             {
+                 healthHearts[i].sprite = emptyHeart;
+             }
+         }
+     }
     
     private IEnumerator InvincibilityCooldown()
     {
-        canTakeDamage = false;
+        _canTakeDamage = false;
         Debug.Log("Invincibility active");
         yield return new WaitForSeconds(invincibilityDuration);
-        canTakeDamage = true;
+        _canTakeDamage = true;
         Debug.Log("Invincibility inactive now");
     }
 
+    // ReSharper disable Unity.PerformanceAnalysis
     private IEnumerator RespawnRoutine()
     {
+        
         yield return new WaitForSeconds(respawnDelay);
+        
         transform.position = respawnPoint.position; // this will move the player to the point
-        currentHealth = maxHealth; // reset health
-        isDead = false; // reset death
-
+        _currentHealth = maxHealth; // reset health
+        UpdateHealthUI();
+        _isDead = false; // reset death
+        
         StartCoroutine(InvincibilityCooldown());
         Debug.Log("The player has respawned!! Is this working now? ahgsjdjkadnbsn");
 

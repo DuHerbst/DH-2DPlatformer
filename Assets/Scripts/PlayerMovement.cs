@@ -5,7 +5,7 @@ public class PlayerMovement : MonoBehaviour
 
 {
     //INPUT ACTIONS
-    private MainActions playerActions; // this playerActions is now the new name of PlayerInputActions || underscores are used when the value is private
+    private MainActions _playerActions; // this playerActions is now the new name of PlayerInputActions || underscores are used when the value is private
     public System.Action OnJump;
     public System.Action <float> Move; // this action needs a value inside <> -- that is why we add float.
     public System.Action<float> Vertical;
@@ -14,24 +14,24 @@ public class PlayerMovement : MonoBehaviour
 
     private void Awake()
     {
-        playerActions = new MainActions(); // create the input actions object
-        playerActions.Enable(); // enable when the component is enabled
+        _playerActions = new MainActions(); // create the input actions object
+        _playerActions.Enable(); // enable when the component is enabled
         Debug.Log("Main Actions created"); 
     }
 
     void OnEnable()
     {
-        playerActions.Character.Jump.performed += OnJumpPressed; // when jump is performed, call the Jump function
+        _playerActions.Character.Jump.performed += OnJumpPressed; // when jump is performed, call the Jump function
         //_testActions.Character.Move.performed += OnMovement;
-        playerActions.Character.Pause.performed += OnPausePressed;
+        _playerActions.Character.Pause.performed += OnPausePressed;
     
     }
     
     void OnDisable()
     {
-        playerActions.Character.Jump.performed -= OnJumpPressed;
+        _playerActions.Character.Jump.performed -= OnJumpPressed;
            //_testActions.Character.Move.performed -= OnMovement;
-           playerActions.Character.Pause.performed -= OnPausePressed;
+           _playerActions.Character.Pause.performed -= OnPausePressed;
     
     }
 
@@ -42,8 +42,8 @@ public class PlayerMovement : MonoBehaviour
     
     void OnMovement()
     {
-        Move?.Invoke(playerActions.Character.Horizontal.ReadValue<float>());
-        Vertical?.Invoke(playerActions.Character.Vertical.ReadValue<float>());
+        Move?.Invoke(_playerActions.Character.Horizontal.ReadValue<float>());
+        Vertical?.Invoke(_playerActions.Character.Vertical.ReadValue<float>());
     }
     
     private void Update()
@@ -53,7 +53,7 @@ public class PlayerMovement : MonoBehaviour
     
     public void OnPausePressed(InputAction.CallbackContext ctx)
     {
-        Pause?.Invoke(playerActions.Character.Pause.ReadValue<float>());
+        Pause?.Invoke(_playerActions.Character.Pause.ReadValue<float>());
         Debug.Log("Pause Pressed");
     }
 

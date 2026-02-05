@@ -37,14 +37,10 @@ public class MovingPlatform : MonoBehaviour
        {
            direction = 1f;
        }
-
        
        float t = currentTime / cycleTime;
        transform.position = Vector3.Lerp(pointA.position, pointB.position, t);
-       
-       
        spriteRenderer.color = Color.Lerp(Color.red, Color.saddleBrown, t);
-       
        
     }
     
