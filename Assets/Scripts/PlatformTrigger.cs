@@ -17,7 +17,7 @@ public class PlatformTrigger : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            other.transform.SetParent(transform);
+            other.transform.SetParent(null); // the parent of the player is now null so it can get off the platform trigger
             Debug.Log("Player exited the trigger area.");
         }
     }

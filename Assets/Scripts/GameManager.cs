@@ -44,7 +44,7 @@ public class GameManager : MonoBehaviour
     // }
 
 
-    public void PauseGame() // Pauses the game by setting time scale to 0
+    public void PauseGame() // Pauses the game by setting timescale to 0
     {
         isPaused = true;
         Time.timeScale = 0f;
@@ -57,6 +57,7 @@ public class GameManager : MonoBehaviour
     public void TogglePause() // Toggles the pause state of the game
     {
         Debug.Log("TogglePause in Game Manager called. isPaused: " + isPaused);
+        
         if (isPaused)
         {
             ResumeGame();

@@ -16,8 +16,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float moveDeceleration = 10f;
     [SerializeField] private float jumpForce = 10f;
     [SerializeField] private float climbSpeed = 5f;
-    [SerializeField] private float dashForce = 15f;
-    //[SerializeField] private float crouchSpeed = 5f;
     
     //HP AND LIVES
     [SerializeField] private int maxHealth = 3;
@@ -28,7 +26,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float invincibilityDuration = 1f;
     [SerializeField] private Transform respawnPoint;
     [SerializeField] private float respawnDelay = 0.5f;
-    
+
+    //public GameObject healthHearts []; // does this create an array of heart game objects in the UI? -- i dont think so... 
+    public Sprite fullHeart;
+    public Sprite emptyHeart;
     
     // INPUT MANAGER
     [SerializeField] private PlayerMovement playerActions; // reference to the input actions scriptable object
@@ -46,12 +47,12 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float climbWallCheckDistance; // how far the raycast checks for climbable walls
     [SerializeField] private Vector2 climbStartPointOffset; // offset for the raycast start point
     public bool canClimb; // is the player currently climbing??
-    
-    //DASH CHECK
-    [SerializeField] private float dashDistance; // how far the dash goes (unsure how to implement yet)
-    [SerializeField] private float dashCooldown; // time between dashes
-    private bool canDash = true;
-    
+
+    // public PlayerController(GameObject healthHearts)
+    // {
+    //     this.healthHearts = healthHearts;
+    // }
+
     void Awake()
     {
         _playerRb = GetComponent<Rigidbody2D>(); // to get the rigidbody component from this game object
@@ -88,10 +89,10 @@ public class PlayerController : MonoBehaviour
         Debug.Log("PlayerController detected Pause input");
         // find one game manager in the scene and call its pause method
         
-        GameManager gameManager = FindObjectOfType <GameManager>();
+        GameManager gameManager = FindFirstObjectByType<GameManager>();
         Debug.Log("Game Manager found? " + (gameManager != null));
         
-        if (gameManager != null)
+        if (gameManager == null) // make sure you know that ! is NEGATIVEEEE
         {
             return;
         }
@@ -138,7 +139,8 @@ public class PlayerController : MonoBehaviour
     void HandleMovement()
     {
         if (!_playerRb) return; 
-        _playerRb.linearVelocityX = _moveInput * moveSpeed;
+        _playerRb.linearVelocityX = _moveInput * moveSpeed; // whne we are talking about velocity += is always acceleration (review)
+        
         
     }
 
@@ -149,13 +151,11 @@ public class PlayerController : MonoBehaviour
         {
             isGrounded = true;
             _moveInput = value;
-            //_playerRb.gravityScale = 0;
+            _playerRb.gravityScale = 0;
             _playerRb.linearVelocityY = _moveInput * climbSpeed;
         }
-        // else
-        // {
-        //     _playerRb.gravityScale = 2;
-        // }
+        
+        //reapply gravity when not climbing --
     }
     
     
@@ -180,14 +180,52 @@ public class PlayerController : MonoBehaviour
         {
             TakeDamage(onHitDamage);
         }
+
+        if (other.gameObject.CompareTag("HealthPack"))
+        {
+            HealPlayer(1);
+            Destroy(other.gameObject);
+        }
     }
-    
+
+    private void HealPlayer(int i)
+    {
+        // need to add healing logic here
+        currentHealth += i;
+        currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth); // if current health after healing exceeds max health, set it to max health and not go past that
+        
+    }
+
     private void TakeDamage(int damage)
     {
+        
+        if (!canTakeDamage || isDead)
+        {
+            return;
+        }
+        
         currentHealth -= damage;
+        
+        // a math function: math f to show how it looks like? I am not sure - i think it goes like this: (clamps values between a minimum and maximum value)
+       currentHealth = Mathf.Clamp (currentHealth - damage, 0, maxHealth);
+       
+
         Debug.Log("Player took damage. Current health: " + currentHealth);
         
-        // start invicibility coroutine and cooldown here 
+        //here we need to build the health UI updates
+        // player takes damage
+        // player loses 1 heart per hit
+        // UI gets updated if current health is less than max
+        // start with an array of hearts in the UI manager
+        
+        if (currentHealth <= 0)
+        {
+            
+            isDead = true;
+            Debug.Log("You dead uwu");
+            FindFirstObjectByType<GameManager>().RestartGame();
+            
+        }
         
         if (currentHealth <= 0 && !isDead)
         {
@@ -208,6 +246,22 @@ public class PlayerController : MonoBehaviour
 
     }
     
+    //create an update function to show the updates in the UI hearts
+    // public UpdateHealthUI()
+    // {
+    //     for (int i = 0; i < healthHearts.Length; i);
+    //
+    //     {
+    //         if (i < currentHealth)
+    //         {
+    //             healthHearts[i].sprite = fullHeart;
+    //         }
+    //         else
+    //         {
+    //             healthHearts[i].sprite = emptyHeart;
+    //         }
+    //     }
+    // }
     
     private IEnumerator InvincibilityCooldown()
     {
