@@ -13,7 +13,6 @@ public class PlayerFootsteps : MonoBehaviour
         
         {
             footstepEffect.Play(); // Play footstep particle effect
-            Debug.Log("hush hush hush hush");
         }
         
     }

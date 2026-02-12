@@ -16,7 +16,6 @@ public class PlayerMovement : MonoBehaviour
     {
         _playerActions = new MainActions(); // create the input actions object
         _playerActions.Enable(); // enable when the component is enabled
-        Debug.Log("Main Actions created"); 
     }
 
     void OnEnable()
@@ -54,7 +53,6 @@ public class PlayerMovement : MonoBehaviour
     public void OnPausePressed(InputAction.CallbackContext ctx)
     {
         Pause?.Invoke(_playerActions.Character.Pause.ReadValue<float>());
-        Debug.Log("Pause Pressed");
     }
 
 

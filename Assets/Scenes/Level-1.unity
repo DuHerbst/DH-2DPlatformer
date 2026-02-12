@@ -30177,7 +30177,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6789611875054815329, guid: e837fc0f81d4c436bbf9f5f00bf3fe17, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.998
+      value: -0.61
       objectReference: {fileID: 0}
     - target: {fileID: 6789611875054815329, guid: e837fc0f81d4c436bbf9f5f00bf3fe17, type: 3}
       propertyPath: m_LocalPosition.z
@@ -32496,6 +32496,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3255d3fafa8714ff693950f313f83f8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CollectibleTracker
+  goalCollectibleCount: 30
   collectibleCountText: {fileID: 979433316}
 --- !u!4 &2096069890 stripped
 Transform:
@@ -32724,7 +32725,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7313438091992644838, guid: d98108c50a9e14321981727077960b42, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -7.8
       objectReference: {fileID: 0}
     - target: {fileID: 7313438091992644838, guid: d98108c50a9e14321981727077960b42, type: 3}
       propertyPath: m_LocalPosition.y

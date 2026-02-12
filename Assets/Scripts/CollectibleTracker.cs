@@ -8,7 +8,6 @@ public class CollectibleTracker : MonoBehaviour
     [SerializeField] private int goalCollectibleCount = 30;
     private bool _hasReachedGoal = false;
     
-    
     [SerializeField] private TextMeshProUGUI collectibleCountText;
     
     public static Action<string> OnCollected; // when a collectible is collected, it will show the collectible's name
@@ -46,7 +45,6 @@ public class CollectibleTracker : MonoBehaviour
         {
             _hasReachedGoal = true;
             Time.timeScale = 1f;
-            Debug.Log("20 coins collected, changing scene");
             SceneManager.LoadScene("WinScene");
         }
         

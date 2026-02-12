@@ -8,16 +8,15 @@ public class CoinScripts : MonoBehaviour, ICollectible // call the interface ICo
    
     public void OnCollect()
     {
-        audioSource.PlayOneShot(collectCoinSound); // Play sound effect for collecting a coin
 
         if (CompareTag("Coin"))
         {
             CollectibleTracker.OnCollected?.Invoke(gameObject.tag); // The collectible has been collected
         }
         
-        Debug.Log("Coin Picked up"); // Log message for collecting a coin
         Destroy(gameObject); // Remove the collectible from the scene
         
+        audioSource.PlayOneShot(collectCoinSound); // 
         
     }
 }

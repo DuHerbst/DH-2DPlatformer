@@ -11,12 +11,12 @@ public class MovingPlatform : MonoBehaviour
     [SerializeField] private Transform pointA;
     [SerializeField] private Transform pointB;
     
-    private SpriteRenderer spriteRenderer;
+    private SpriteRenderer _spriteRenderer;
 
 
     void Start()
     {
-        spriteRenderer = GetComponent<SpriteRenderer>(); // getting the sprite rendererr component from this specifc game object
+        _spriteRenderer = GetComponent<SpriteRenderer>(); // getting the sprite renderer component from this specifc game object
     }
     
     
@@ -38,9 +38,11 @@ public class MovingPlatform : MonoBehaviour
            direction = 1f;
        }
        
+       currentTime = Mathf.Clamp(currentTime, 0, cycleTime);
+       
        float t = currentTime / cycleTime;
        transform.position = Vector3.Lerp(pointA.position, pointB.position, t);
-       spriteRenderer.color = Color.Lerp(Color.red, Color.saddleBrown, t);
+       _spriteRenderer.color = Color.Lerp(Color.green, Color.darkGreen, t);
        
     }
     

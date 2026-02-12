@@ -16,8 +16,9 @@ public class ClimbableWalls : MonoBehaviour
 
     void OnTriggerExit2D(Collider2D other)
     {
-        if (_playerController != null)
+        if (other.gameObject.CompareTag("Player"))
         {
+            _playerController = other.GetComponent<PlayerController>();
             _playerController.canClimb = false;
         }
     }
